@@ -1,0 +1,15 @@
+.DS_Store
+.vscode
+/.VSCodeCounter
+
+*.pyc
+__pycache__
+**/__pycache__/
+.mypy_cache/
+.empty/
+.pytest_cache
+
+/tmp/
+demo.py
+
+dist/
