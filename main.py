@@ -1,3 +1,3 @@
-from server.server import deployment
+from server.server import app_builder
 
-app = deployment
+app = app_builder

@@ -1,5 +1,4 @@
 import torch
-import logging
 
 from llmlite.apis import ChatLLM, ChatMessage
 
@@ -9,6 +8,7 @@ from pipelines.templates.summary_template import (
     SUMMARY_USER_PROMPT,
 )
 from providers.github_provider import get_pr_info
+from utils.log import rayserve_logger
 
 
 class SummaryPipeline(Pipeline):
@@ -25,7 +25,7 @@ class SummaryPipeline(Pipeline):
         self.chat = ChatLLM(
             model_name_or_path=model_name_or_path, task=task, torch_dtype=torch_dtype
         )
-        self.logger = logging.getLogger("pr-copilot.SummaryPipeline")
+        self.logger = rayserve_logger()
 
     def completion(self, url: str) -> str:
         pr_info = get_pr_info(url=url)
@@ -35,6 +35,8 @@ class SummaryPipeline(Pipeline):
             commit_messages=pr_info["commit_messages"],
             pr_diffs=pr_info["pr_diffs"],
         )
+
+        self.logger.debug("user prompt: {prompt}".format(prompt=user_prompt))
 
         return self.chat.completion(
             messages=[
