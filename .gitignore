@@ -13,3 +13,4 @@ __pycache__
 demo.py
 
 dist/
+*.zip

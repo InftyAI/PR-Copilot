@@ -1,20 +1,21 @@
-import requests
-from retry import retry
 from typing import Dict
 
-from utils.util import parse_content
-from utils.envs import GITHUB_TOKEN
+import requests
+from retry import retry
+
+from copilot.utils.util import parse_content
+from copilot.utils.envs import GITHUB_TOKEN
 
 
-def convert_to_diff_url(url: str = None):
-    if str is None:
+def convert_to_diff_url(url: str | None = None):
+    if url is None:
         return ""
     url = url.replace("github.com", "patch-diff.githubusercontent.com/raw")
     url += ".diff"
     return url
 
 
-def convert_to_pull_pr_url(url: str = None) -> str:
+def convert_to_pull_pr_url(url: str | None = None) -> str:
     if url is None:
         return ""
     url = url.replace("github.com", "api.github.com/repos")
@@ -22,13 +23,13 @@ def convert_to_pull_pr_url(url: str = None) -> str:
     return url
 
 
-def convert_to_pull_commit_url(url: str = None) -> str:
+def convert_to_pull_commit_url(url: str | None = None) -> str:
     url = convert_to_pull_pr_url(url)
     url += "/commits"
     return url
 
 
-def split_line_break(content: str = None) -> str:
+def split_line_break(content: str | None = None) -> str:
     if content is None:
         return ""
     return content.split("\n\n")[0]

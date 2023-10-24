@@ -1,6 +1,6 @@
 import logging
 
-from utils.envs import LOG_LEVEL
+from copilot.utils.envs import LOG_LEVEL
 
 
 def rayserve_logger():
