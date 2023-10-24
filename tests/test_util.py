@@ -1,4 +1,4 @@
-from utils.util import parse_content
+from copilot.utils.util import parse_content
 
 
 class TestUtil:

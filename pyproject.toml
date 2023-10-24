@@ -9,10 +9,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "0.103.0"
-ray = {extras = ["serve"], version = "^2.6.3"}
+ray = {extras = ["serve"], version = "2.6.3"}
 torch = "2.0.0"
 llmlite = "0.0.7"
 retry = "^0.9.2"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"
@@ -22,3 +23,9 @@ mypy = "^1.5.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+exclude = [
+    'tmp/',
+    'examples/',
+]

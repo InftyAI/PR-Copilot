@@ -1,4 +1,4 @@
-from pipelines.templates.summary_template import SUMMARY_USER_PROMPT
+from copilot.pipelines.templates.summary_template import SUMMARY_USER_PROMPT
 
 
 def test_summary_template():
