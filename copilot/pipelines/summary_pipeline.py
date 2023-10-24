@@ -5,7 +5,7 @@ from copilot.pipelines.templates.summary_template import (
     SUMMARY_SYSTEM_PROMPT,
     SUMMARY_USER_PROMPT,
 )
-from copilot.providers.github_provider import get_pr_info
+from copilot.providers.github_provider import GitHubProvider
 from copilot.utils.log import rayserve_logger
 
 
@@ -19,7 +19,7 @@ class SummaryPipeline(Pipeline):
         self.logger = rayserve_logger()
 
     def completion(self, url: str) -> str | None:
-        pr_info = get_pr_info(url=url)
+        pr_info = GitHubProvider.get_pr_info(url=url)
         user_prompt = SUMMARY_USER_PROMPT.format(
             title=pr_info["title"],
             description=pr_info["description"],
