@@ -28,11 +28,8 @@ build: lint
 		./ \
 
 .PHONY: export-requirements
-export-requirements: export-requirements-dev
+export-requirements:
 	poetry export -f requirements.txt -o requirements.txt --without-hashes
-
-.PHONY: export-requirements-dev
-export-requirements-dev:
 	poetry export -f requirements.txt -o requirements-dev.txt --without-hashes --with dev
 
 .PHONY: build-zip
@@ -49,4 +46,4 @@ build-zip:
 
 .PHONY: run
 run:
-	serve run main:app model_name_or_path="/workspace/models/meta-llama/llama-2-7b-chat-hf"
+	serve run main:app model_name_or_path="/workspace/models/meta-llama/codellama-13b-instruct-hf"
