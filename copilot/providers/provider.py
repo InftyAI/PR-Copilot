@@ -8,7 +8,7 @@ class Provider(ABC):
 
     @classmethod
     @abstractmethod
-    def get_pr_info(self, url: str) -> Dict[str, str]:
+    def get_pr_info(cls, url: str) -> Dict[str, str]:
         """
         Args:
             url: The pr link.

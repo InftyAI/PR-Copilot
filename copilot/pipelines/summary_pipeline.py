@@ -34,4 +34,7 @@ class SummaryPipeline(Pipeline):
                 ChatMessage(role="system", content=SUMMARY_SYSTEM_PROMPT),
                 ChatMessage(role="user", content=user_prompt),
             ],
+            promptMode="instruct",
+            max_length=8192,
+            return_full_text=False,
         )

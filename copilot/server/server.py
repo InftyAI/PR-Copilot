@@ -1,11 +1,12 @@
 from typing import Dict, Literal
 
+# from transformers import BitsAndBytesConfig
+import torch
 from ray import serve
 from llmlite.apis import ChatLLM  # type: ignore
 from ray.serve import Application
 from fastapi import FastAPI
 from pydantic import BaseModel
-import torch
 
 # from copilot.pipelines.review_pipeline import ReviewPipeline
 from copilot.pipelines.summary_pipeline import SummaryPipeline
@@ -45,8 +46,18 @@ class AgentDeployment:
             task (str): The task defining which pipeline will be returned.
             torch_dtype (torch.dtype): The precision for this model.
         """
+
+        # TODO: support quantization
+        # quantization_config = BitsAndBytesConfig(
+        #     load_in_4bit=True,
+        #     bnb_4bit_compute_dtype=torch.float16,
+        # )
+
         llm = ChatLLM(
-            model_name_or_path=model_name_or_path, task=task, torch_dtype=torch_dtype
+            model_name_or_path=model_name_or_path,
+            task=task,
+            torch_dtype=torch_dtype,
+            # quantization_config=quantization_config,
         )
         self.summary_pipeline = SummaryPipeline(llm)
         # self.review_pipeline = ReviewPipeline(llm)

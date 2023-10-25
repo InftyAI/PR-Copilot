@@ -48,7 +48,7 @@ class GitHubProvider(Provider):
         backoff=2,
         jitter=(1, 3),
     )
-    def get_pr_info(url: str) -> Dict[str, str]:
+    def get_pr_info(cls, url: str) -> Dict[str, str]:
         """
         Args:
             url: The pr link.
