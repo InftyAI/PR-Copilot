@@ -2,13 +2,14 @@ from typing import Dict, Literal
 
 import torch
 from ray import serve
-from llmlite.apis import ChatLLM  # type: ignore
+from llmlite.apis import ChatLLM, ChatMessage  # type: ignore
 from ray.serve import Application
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 # from copilot.pipelines.review_pipeline import ReviewPipeline
 from copilot.pipelines.summary_pipeline import SummaryPipeline
+from copilot.pipelines.gen_pipeline import GenPipeline
 from copilot.utils.envs import GITHUB_TOKEN
 from copilot.providers.github_provider import GitHubProvider
 from copilot.utils.log import rayserve_logger
@@ -22,6 +23,11 @@ DEFAULT_TASK = "text-generation"
 # Item helps to constrain the request parameters.
 class Item(BaseModel):
     url: str
+
+
+class Prompt(BaseModel):
+    system_prompt: str
+    user_prompt: str
 
 
 @serve.deployment(
@@ -59,6 +65,7 @@ class AgentDeployment:
             torch_dtype=torch_dtype,
         )
         self.summary_pipeline = SummaryPipeline(llm)
+        self.gen_pipeline = GenPipeline(llm)
         # self.review_pipeline = ReviewPipeline(llm)
 
         self.logger = rayserve_logger()
@@ -74,14 +81,18 @@ class AgentDeployment:
         self.logger.debug("request parameters: {item}".format(item=item))
         # return self.review_pipeline.completion(url=item.url)
 
-    @app.get("/pr-gen/")
-    def generate(self, content: str):
+    @app.post("/pr-gen/")
+    def generate(self, prompt: Prompt):
         """
         Args:
             item (Item): The POST body should include the url.
         """
-
-        self.logger.debug("request parameters: {item}".format(item=content))
+        messages = [
+            ChatMessage(role="system", content=prompt.system_prompt),
+            ChatMessage(role="user", content=prompt.user_prompt),
+        ]
+        # self.logger.debug("request parameters: {item}".format(item=content))
+        return self.gen_pipeline.completion(messages=messages)
 
     @app.post("/pr-summary/")
     def summary(self, item: Item):
