@@ -2,6 +2,7 @@ from copilot.providers.github_provider import (
     convert_to_diff_url,
     convert_to_pull_pr_url,
     convert_to_pull_commit_url,
+    convert_to_comment_url,
     split_line_break,
 )
 
@@ -52,3 +53,8 @@ class TestGithubUtil:
 
         assert split_line_break(former_content) == target_content
         assert split_line_break(target_content) == target_content
+
+    def test_convert_to_commit_url(self):
+        former_url = "https://github.com/InftyAI/llmlite/pull/28"
+        target_url = "https://api.github.com/repos/InftyAI/llmlite/issues/28/comments"
+        assert convert_to_comment_url(former_url) == target_url

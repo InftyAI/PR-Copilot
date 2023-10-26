@@ -21,3 +21,8 @@ class Provider(ABC):
                 git_diffs (str):
         """
         pass
+
+    @classmethod
+    @abstractmethod
+    def comment(cls, url: str, body: str):
+        pass

@@ -8,7 +8,7 @@ class Pipeline(ABC):
         self.llm = llm
 
     @abstractmethod
-    def completion(self, url: str) -> str | None:
+    def completion(self, content: str) -> str | None:
         """
         Args:
             url (str): The PR link.
