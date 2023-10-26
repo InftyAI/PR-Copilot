@@ -30,6 +30,13 @@ def convert_to_pull_commit_url(url: str | None = None) -> str:
     return url
 
 
+def convert_to_comment_url(url: str) -> str:
+    url = url.replace("github.com", "api.github.com/repos")
+    url = url.replace("pull", "issues")
+    url += "/comments"
+    return url
+
+
 def split_line_break(content: str | None = None) -> str:
     if content is None:
         return ""
@@ -62,11 +69,7 @@ class GitHubProvider(Provider):
         """
 
         res = {}
-        headers = {
-            "Accept": "application/vnd.github+json",
-            "Authorization": "Bearer " + str(GITHUB_TOKEN),
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
+        headers = get_headers()
 
         # request to get pull request info.
         pr_resp = requests.get(
@@ -110,3 +113,28 @@ class GitHubProvider(Provider):
         res["pr_diffs"] = diff_resp.text
 
         return res
+
+    @classmethod
+    @retry(
+        tries=3,
+        delay=2,
+        backoff=2,
+        jitter=(1, 3),
+    )
+    def comment(cls, url: str, body: str):
+        resp = requests.post(
+            convert_to_comment_url(url),
+            headers=get_headers(),
+            json={"body": body},
+        )
+
+        if resp.status_code != 201:
+            raise Exception("comment error, status code %s", resp.status_code)
+
+
+def get_headers():
+    return {
+        "Accept": "application/vnd.github+json",
+        "Authorization": "Bearer " + str(GITHUB_TOKEN),
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
